@@ -45,7 +45,7 @@ ChartPlot::ChartPlot(QWidget* parent):
         _colors.append(baseColors[i]);
     }
     // Now that all objects have been initialized, color everything.
-    styleChanged(qgcApp()->toolbox()->settingsManager()->appSettings()->indoorPalette()->rawValue().toBool());
+    styleChanged(true);
 }
 
 ChartPlot::~ChartPlot()

@@ -10,6 +10,7 @@
 
 import QtQuick          2.3
 import QtQuick.Controls 1.2
+import QtQuick.Dialogs  1.2
 import QtQuick.Layouts  1.2
 
 import QGroundControl               1.0
@@ -57,6 +58,15 @@ Rectangle {
 
             property real _maxButtonWidth: 0
 
+            MessageDialog {
+                id: shutdownConfirmation
+                title: qsTr("Shut Down")
+                text: qsTr("You want to shutdown Ground Control Station?")
+                standardButtons: StandardButton.Yes | StandardButton.Cancel
+                modality: Qt.ApplicationModal
+                onYes: controller.close()
+            }
+
             QGCLabel {
                 anchors.left:           parent.left
                 anchors.right:          parent.right
@@ -87,6 +97,18 @@ Rectangle {
                             checked = true
                         }
                     }
+                }
+            }
+
+            QGCButton {
+                height:             _buttonHeight
+                text:               qsTr("Shut Down")
+                exclusiveGroup:     panelActionGroup
+                Layout.fillWidth:   true
+
+                onClicked: {
+                    checked = true
+                    shutdownConfirmation.open()
                 }
             }
         }

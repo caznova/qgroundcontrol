@@ -51,15 +51,13 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>22</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="separator"/>
-    <addaction name="actionStatusBar"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -71,7 +69,11 @@
    <addaction name="menuFile"/>
    <addaction name="menuWidgets"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QStatusBar" name="statusBar">
+   <property name="sizeGripEnabled">
+    <bool>false</bool>
+   </property>
+  </widget>
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
@@ -91,14 +93,6 @@
    </property>
    <property name="text">
     <string>Advanced Mode</string>
-   </property>
-  </action>
-  <action name="actionStatusBar">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Replay Flight Data</string>
    </property>
   </action>
  </widget>

@@ -409,12 +409,6 @@ void MAVLinkProtocol::_startLogging(void)
     if (qgcApp()->runningUnitTests()) {
         return;
     }
-#ifdef __mobile__
-    //-- Mobile build don't write to /tmp unless told to do so
-    if (!_app->toolbox()->settingsManager()->appSettings()->telemetrySave()->rawValue().toBool()) {
-        return;
-    }
-#endif
     //-- Log is always written to a temp file. If later the user decides they want
     //   it, it's all there for them.
     if (!_tempLogFile.isOpen()) {
@@ -439,12 +433,7 @@ void MAVLinkProtocol::_stopLogging(void)
 {
     if (_tempLogFile.isOpen()) {
         if (_closeLogFile()) {
-            if ((_vehicleWasArmed || _app->toolbox()->settingsManager()->appSettings()->telemetrySaveNotArmed()->rawValue().toBool()) &&
-                _app->toolbox()->settingsManager()->appSettings()->telemetrySave()->rawValue().toBool()) {
-                emit saveTelemetryLog(_tempLogFile.fileName());
-            } else {
-                QFile::remove(_tempLogFile.fileName());
-            }
+            emit saveTelemetryLog(_tempLogFile.fileName());
         }
     }
     _vehicleWasArmed = false;

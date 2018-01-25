@@ -68,7 +68,7 @@ public:
     /// Request a refresh on all parameters that begin with the specified prefix
     void refreshParametersPrefix(int componentId, const QString& namePrefix);
     
-    void resetAllParametersToDefaults(void);
+    Q_INVOKABLE void resetAllParametersToDefaults(void);
 
     /// Returns true if the specifed parameter exists
     ///     @param componentId Component id or FactSystem::defaultComponentId

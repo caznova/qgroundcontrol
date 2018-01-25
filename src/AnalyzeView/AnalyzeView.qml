@@ -69,12 +69,6 @@ Rectangle {
 
             Component.onCompleted: reflowWidths()
 
-            // I don't know why this does not work
-            Connections {
-                target:         QGroundControl.settingsManager.appSettings.appFontPointSize
-                onValueChanged: buttonColumn.reflowWidths()
-            }
-
             function reflowWidths() {
                 buttonColumn._maxButtonWidth = 0
                 for (var i = 0; i < children.length; i++) {

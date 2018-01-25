@@ -31,9 +31,7 @@
 #include "MAVLinkProtocol.h"
 #include "MainWindow.h"
 #include "AudioOutput.h"
-#ifndef __mobile__
 #include "QGCMAVLinkLogPlayer.h"
-#endif
 #include "MAVLinkDecoder.h"
 #include "QGCApplication.h"
 #include "MultiVehicleManager.h"
@@ -110,7 +108,6 @@ void MainWindow::deleteInstance(void)
 MainWindow::MainWindow()
     : _mavlinkDecoder       (NULL)
     , _lowPowerMode         (false)
-    , _showStatusBar        (false)
     , _mainQmlWidgetHolder  (NULL)
     , _forceClose           (false)
 {
@@ -177,7 +174,6 @@ MainWindow::MainWindow()
 
     // Status Bar
     setStatusBar(new QStatusBar(this));
-    statusBar()->setSizeGripEnabled(true);
 
 #ifndef __mobile__
     emit initStatusChanged(tr("Building common widgets."), Qt::AlignLeft | Qt::AlignBottom, QColor(62, 93, 141));
@@ -232,18 +228,14 @@ MainWindow::MainWindow()
     }
 #endif
 
-    connect(_ui.actionStatusBar,  &QAction::triggered, this, &MainWindow::showStatusBarCallback);
 
     connect(&windowNameUpdateTimer, &QTimer::timeout, this, &MainWindow::configureWindowName);
     windowNameUpdateTimer.start(15000);
     emit initStatusChanged(tr("Done"), Qt::AlignLeft | Qt::AlignBottom, QColor(62, 93, 141));
 
     if (!qgcApp()->runningUnitTests()) {
-        _ui.actionStatusBar->setChecked(_showStatusBar);
-        showStatusBarCallback(_showStatusBar);
-#ifdef __mobile__
         menuBar()->hide();
-#endif
+		setWindowFlags(windowFlags() | Qt::FramelessWindowHint);
         show();
     }
 
@@ -296,6 +288,7 @@ void MainWindow::_buildCommonWidgets(void)
     // TODO: Make this optional with a preferences setting or under a "View" menu
     logPlayer = new QGCMAVLinkLogPlayer(statusBar());
     statusBar()->addPermanentWidget(logPlayer);
+    logPlayer->hide();
 
     // Populate widget menu
     for (int i = 0, end = ARRAY_SIZE(rgDockWidgetNames); i < end; i++) {
@@ -375,11 +368,6 @@ void MainWindow::_showDockWidgetAction(bool show)
 }
 #endif
 
-void MainWindow::showStatusBarCallback(bool checked)
-{
-    _showStatusBar = checked;
-    checked ? statusBar()->show() : statusBar()->hide();
-}
 
 void MainWindow::_reallyClose(void)
 {
@@ -413,7 +401,6 @@ void MainWindow::loadSettings()
     QSettings settings;
     settings.beginGroup(MAIN_SETTINGS_GROUP);
     _lowPowerMode   = settings.value("LOW_POWER_MODE",      _lowPowerMode).toBool();
-    _showStatusBar  = settings.value("SHOW_STATUSBAR",      _showStatusBar).toBool();
     settings.endGroup();
 }
 
@@ -422,7 +409,6 @@ void MainWindow::storeSettings()
     QSettings settings;
     settings.beginGroup(MAIN_SETTINGS_GROUP);
     settings.setValue("LOW_POWER_MODE",     _lowPowerMode);
-    settings.setValue("SHOW_STATUSBAR",     _showStatusBar);
     settings.endGroup();
     settings.setValue(_getWindowGeometryKey(), saveGeometry());
 

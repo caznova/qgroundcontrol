@@ -62,7 +62,7 @@
     "type":             "uint32",
     "defaultValue":     30,
     "units":            "%",
-    "min":              0,
+    "min":              30,
     "max":              100
 },
 {

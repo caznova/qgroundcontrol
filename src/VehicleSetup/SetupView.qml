@@ -296,15 +296,21 @@ Rectangle {
                 }
             }
 
-            SubMenuButton {
-                setupIndicator:     false
-                exclusiveGroup:     setupButtonGroup
-                visible:            QGroundControl.multiVehicleManager && QGroundControl.multiVehicleManager.parameterReadyVehicleAvailable && _corePlugin.showAdvancedUI
-                text:               qsTr("Parameters")
-                Layout.fillWidth:   true
+            Rectangle {
+                        color: qgcPal.window
 
-                onClicked: showParametersPanel()
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
             }
+
+            SubMenuButton {
+                        text: qsTr("Factory Reset")
+                        exclusiveGroup: setupButtonGroup
+                        setupIndicator: false
+                        visible: QGroundControl.multiVehicleManager && QGroundControl.multiVehicleManager.parameterReadyVehicleAvailable
+                        onClicked: QGroundControl.multiVehicleManager.activeVehicle.parameterManager.resetAllParametersToDefaults()
+                        Layout.fillWidth: true
+           }
 
         }
     }

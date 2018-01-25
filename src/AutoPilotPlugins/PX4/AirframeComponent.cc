@@ -55,10 +55,14 @@ QStringList AirframeComponent::setupCompleteChangedTriggerList(void) const
 
 QUrl AirframeComponent::setupSource(void) const
 {
-    return QUrl::fromUserInput("qrc:/qml/AirframeComponent.qml");
+    //!--CTIT Customer Disable
+    //return QUrl::fromUserInput("qrc:/qml/AirframeComponent.qml");
+    return QUrl();
 }
 
 QUrl AirframeComponent::summaryQmlSource(void) const
 {
-    return QUrl::fromUserInput("qrc:/qml/AirframeComponentSummary.qml");
+    //!--CTIT Customer Disable
+    //return QUrl::fromUserInput("qrc:/qml/AirframeComponentSummary.qml");
+    return QUrl();
 }

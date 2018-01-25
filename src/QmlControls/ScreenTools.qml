@@ -80,16 +80,6 @@ Item {
     readonly property string normalFontFamily:      "opensans"
     readonly property string demiboldFontFamily:    "opensans-demibold"
     readonly property string fixedFontFamily:       ScreenToolsController.fixedFontFamily
-    /* This mostly works but for some reason, reflowWidths() in SetupView doesn't change size.
-       I've disabled (in release builds) until I figure out why. Changes require a restart for now.
-    */
-    Connections {
-        target: QGroundControl.settingsManager.appSettings.appFontPointSize
-        onValueChanged: {
-            if(ScreenToolsController.isDebug)
-                _setBasePointSize(QGroundControl.settingsManager.appSettings.appFontPointSize.value)
-        }
-    }
 
     function printScreenStats() {
         console.log('ScreenTools: Screen.width: ' + Screen.width + ' Screen.height: ' + Screen.height + ' Screen.pixelDensity: ' + Screen.pixelDensity)
@@ -136,38 +126,7 @@ Item {
         property real   fontWidth:    contentWidth
         property real   fontHeight:   contentHeight
         Component.onCompleted: {
-            var _appFontPointSizeFact = QGroundControl.settingsManager.appSettings.appFontPointSize
-            var baseSize = _appFontPointSizeFact.value
-            //-- If this is the first time (not saved in settings)
-            if(baseSize < _appFontPointSizeFact.min || baseSize > _appFontPointSizeFact.max) {
-                //-- Init base size base on the platform
-                if(ScreenToolsController.isMobile) {
-                    //-- Check iOS really tiny screens (iPhone 4s/5/5s)
-                    if(ScreenToolsController.isiOS) {
-                        if(ScreenToolsController.isiOS && Screen.width < 570) {
-                            // For iPhone 4s size we don't fit with additional tweaks to fit screen,
-                            // we will just drop point size to make things fit. Correct size not yet determined.
-                            baseSize = 12;  // This will be lowered in a future pull
-                        } else {
-                            baseSize = 14;
-                        }
-                    } else if((Screen.width / Screen.pixelDensity) < 120) {
-                        baseSize = 11;
-                    // Other Android
-                    } else {
-                        baseSize = 14;
-                    }
-                } else {
-                    baseSize = _defaultFont.font.pointSize;
-                }
-                _appFontPointSizeFact.value = baseSize
-                //-- Release build doesn't get signal
-                if(!ScreenToolsController.isDebug)
-                    _screenTools._setBasePointSize(baseSize);
-            } else {
-                //-- Set size saved in settings
-                _screenTools._setBasePointSize(baseSize);
-            }
+             _screenTools._setBasePointSize(_defaultFont.font.pointSize);
         }
     }
 }

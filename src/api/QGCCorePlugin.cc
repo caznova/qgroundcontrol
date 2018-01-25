@@ -192,33 +192,7 @@ bool QGCCorePlugin::overrideSettingsGroupVisibility(QString name)
 
 bool QGCCorePlugin::adjustSettingMetaData(FactMetaData& metaData)
 {
-    //-- Default Palette
-    if (metaData.name() == AppSettings::indoorPaletteName) {
-        QVariant outdoorPalette;
-#if defined (__mobile__)
-        outdoorPalette = 0;
-#else
-        outdoorPalette = 1;
-#endif
-        metaData.setRawDefaultValue(outdoorPalette);
-        return true;
-    //-- Auto Save Telemetry Logs
-    } else if (metaData.name() == AppSettings::telemetrySaveName) {
-#if defined (__mobile__)
-        metaData.setRawDefaultValue(false);
-        return true;
-#else
-        metaData.setRawDefaultValue(true);
-        return true;
-#endif
-#if defined(__ios__)
-    } else if (metaData.name() == AppSettings::savePathName) {
-        QString appName = qgcApp()->applicationName();
-        QDir rootDir = QDir(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-        metaData.setRawDefaultValue(rootDir.filePath(appName));
-        return false;
-#endif
-    }
+    Q_UNUSED(metaData);
     return true; // Show setting in ui
 }
 
