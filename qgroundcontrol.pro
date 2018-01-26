@@ -485,6 +485,10 @@ DebugBuild { PX4FirmwarePlugin { PX4FirmwarePluginFactory  { APMFirmwarePlugin {
 
 # Main QGC Headers and Source files
 
+CONFIG -= flat
+CONFIG += ordered
+CONFIG += object_parallel_to_source
+
 HEADERS += \
     src/AnalyzeView/ExifParser.h \
     src/AnalyzeView/LogDownloadController.h \
