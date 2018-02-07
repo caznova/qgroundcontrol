@@ -494,10 +494,6 @@ DebugBuild { PX4FirmwarePlugin { PX4FirmwarePluginFactory  { APMFirmwarePlugin {
 
 # Main QGC Headers and Source files
 
-CONFIG -= flat
-CONFIG += ordered
-CONFIG += object_parallel_to_source
-
 HEADERS += \
     src/AnalyzeView/ExifParser.h \
     src/AnalyzeView/LogDownloadController.h \
@@ -623,6 +619,9 @@ WindowsBuild {
     HEADERS += src/stable_headers.h
     CONFIG -= silent
     OTHER_FILES += .appveyor.yml
+    CONFIG -= flat
+    CONFIG += ordered
+    #CONFIG += object_parallel_to_source
 }
 
 contains(DEFINES, QGC_ENABLE_BLUETOOTH) {
