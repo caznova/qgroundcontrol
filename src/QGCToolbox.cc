@@ -30,6 +30,7 @@
 #include "QGCOptions.h"
 #include "SettingsManager.h"
 #include "QGCApplication.h"
+#include "WifiSettings.h"
 
 #if defined(QGC_CUSTOM_BUILD)
 #include CUSTOMHEADER
@@ -56,6 +57,7 @@ QGCToolbox::QGCToolbox(QGCApplication* app)
     , _mavlinkLogManager(NULL)
     , _corePlugin(NULL)
     , _settingsManager(NULL)
+    , _wifiSetting(NULL)
 {
     // SettingsManager must be first so settings are available to any subsequent tools
     _settingsManager =          new SettingsManager(app, this);
@@ -80,6 +82,7 @@ QGCToolbox::QGCToolbox(QGCApplication* app)
     _followMe =                 new FollowMe                (app, this);
     _videoManager =             new VideoManager            (app, this);
     _mavlinkLogManager =        new MAVLinkLogManager       (app, this);
+    _wifiSetting =              new WifiSetting             (app, this);
 }
 
 void QGCToolbox::setChildToolboxes(void)
@@ -106,6 +109,7 @@ void QGCToolbox::setChildToolboxes(void)
     _qgcPositionManager->setToolbox(this);
     _videoManager->setToolbox(this);
     _mavlinkLogManager->setToolbox(this);
+    _wifiSetting->setToolbox(this);
 }
 
 void QGCToolbox::_scanAndLoadPlugins(QGCApplication* app)

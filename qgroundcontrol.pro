@@ -361,6 +361,7 @@ INCLUDEPATH += \
     src/ui/px4_configuration \
     src/ui/toolbar \
     src/ui/uas \
+    src/CTIT \
 
 FORMS += \
     src/ui/MainWindow.ui \
@@ -391,12 +392,14 @@ HEADERS += \
     src/api/QGCOptions.h \
     src/api/QGCSettings.h \
     src/api/QmlComponentInfo.h \
+    src/CTIT/WifiSettings.h
 
 SOURCES += \
     src/api/QGCCorePlugin.cc \
     src/api/QGCOptions.cc \
     src/api/QGCSettings.cc \
     src/api/QmlComponentInfo.cc \
+    src/CTIT/WifiSettings.cc
 
 #
 # Unit Test specific configuration goes here (requires full debug build with all plugins)

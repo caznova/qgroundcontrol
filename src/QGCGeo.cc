@@ -15,6 +15,10 @@
 #include "QGCGeo.h"
 #include "UTM.h"
 
+#ifndef M_PI
+    #define M_PI   3.14159265358979323846264338327950288
+#endif
+
 // These defines are private
 #define M_DEG_TO_RAD (M_PI / 180.0)
 
