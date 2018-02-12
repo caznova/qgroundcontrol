@@ -405,7 +405,7 @@ SOURCES += \
 # Unit Test specific configuration goes here (requires full debug build with all plugins)
 #
 
-DebugBuild { PX4FirmwarePlugin { PX4FirmwarePluginFactory  { APMFirmwarePlugin { APMFirmwarePluginFactory { !MobileBuild {
+TestBuild { PX4FirmwarePlugin { PX4FirmwarePluginFactory  { APMFirmwarePlugin { APMFirmwarePluginFactory { !MobileBuild {
     DEFINES += UNITTEST_BUILD
 
     INCLUDEPATH += \

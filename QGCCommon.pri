@@ -259,3 +259,6 @@ ReleaseBuild {
         QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO += /OPT:ICF
     }
 }
+
+DISTFILES += \
+    $$PWD/user_config.pri
