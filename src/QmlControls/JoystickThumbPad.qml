@@ -1,7 +1,6 @@
 import QtQuick                  2.3
 import QtQuick.Controls         1.2
 
-import QGroundControl               1.0
 import QGroundControl.Palette       1.0
 import QGroundControl.ScreenTools   1.0
 
@@ -14,28 +13,20 @@ Item {
     property bool   yAxisThrottle:  false               ///< true: yAxis used for throttle, range [1,0], positive value are stick up
     property real   xPositionDelta: 0                   ///< Amount to move the control on x axis
     property real   yPositionDelta: 0                   ///< Amount to move the control on y axis
-    property bool   gimbalMode:     false               ///< true: Gimbal Control Mode false: Joystick Mode
-    property real   stickPositionX:         _centerXY
-    property real   stickPositionY:         yAxisThrottle ? height : _centerXY
 
-    property real   _centerXY:              width * 0.5
+    property real   _centerXY:              width / 2
     property bool   _processTouchPoints:    false
     property bool   _stickCenteredOnce:     false
-    property bool   _zoomControl:           yAxisThrottle ? gimbalMode : false
-    property real   _radius:                ScreenTools.defaultFontPixelWidth * 0.25
-
-    readonly property real _hatWidth:       ScreenTools.defaultFontPixelHeight
-    readonly property real _hatWidthHalf:   ScreenTools.defaultFontPixelHeight / 2
+    property real   stickPositionX:         _centerXY
+    property real   stickPositionY:         yAxisThrottle ? height : _centerXY
 
     QGCMapPalette { id: mapPal }
 
     onStickPositionXChanged: {
-        if(!_zoomControl) {
-            var xAxisTemp = stickPositionX / width
-            xAxisTemp *= 2.0
-            xAxisTemp -= 1.0
-            xAxis = xAxisTemp
-        }
+        var xAxisTemp = stickPositionX / width
+        xAxisTemp *= 2.0
+        xAxisTemp -= 1.0
+        xAxis = xAxisTemp
     }
 
     onStickPositionYChanged: {
@@ -51,15 +42,15 @@ Item {
     function reCenter()
     {
         _processTouchPoints = false
+
         // Move control back to original position
         xPositionDelta = 0
         yPositionDelta = 0
+
         // Center sticks
-        if(!gimbalMode) {
-            stickPositionX = _centerXY
-            if (!yAxisThrottle) {
-                stickPositionY = _centerXY
-            }
+        stickPositionX = _centerXY
+        if (!yAxisThrottle) {
+            stickPositionY = _centerXY
         }
     }
 
@@ -72,6 +63,7 @@ Item {
         } else {
             yPositionDelta = touchPoints[0].y - _centerXY
         }
+
         // We need to wait until we move the control to the right position before we process touch points
         _processTouchPoints = true
     }
@@ -89,78 +81,42 @@ Item {
         source:             lightColors ? "/res/JoystickBezel.png" : "/res/JoystickBezelLight.png"
         mipmap:             true
         smooth:             true
-        visible:            !_zoomControl
+    }
+
+    Rectangle {
+        anchors.margins:    parent.width / 4
+        anchors.fill:       parent
+        radius:             width / 2
+        border.color:       mapPal.thumbJoystick
+        border.width:       2
+        color:              "transparent"
     }
 
     Rectangle {
         anchors.fill:       parent
-        anchors.margins:    parent.width / 4
-        radius:             width * 0.5
+        radius:             width / 2
         border.color:       mapPal.thumbJoystick
         border.width:       2
-        color:              Qt.rgba(0,0,0,0)
-        visible:            !_zoomControl
+        color:              "transparent"
     }
 
     Rectangle {
-        id:                 outerRing
-        anchors.fill:       _zoomControl ? undefined : parent
-        height:             _zoomControl ? parent.height : undefined
-        width:              _zoomControl ? parent.height * 0.25 : undefined
-        anchors.horizontalCenter: _zoomControl ? parent.horizontalCenter : undefined
-        radius:             _zoomControl ? _radius : width * 0.5
-        border.color:       mapPal.thumbJoystick
-        border.width:       2
-        color:              _zoomControl ? Qt.rgba(0,0,0,0.25) : Qt.rgba(0,0,0,0)
-    }
+        width:  hatWidth
+        height: hatWidth
+        radius: hatWidthHalf
+        color:  mapPal.thumbJoystick
+        x:      stickPositionX - hatWidthHalf
+        y:      stickPositionY - hatWidthHalf
 
-    Rectangle {
-        visible:            _zoomControl
-        width:              ScreenTools.defaultFontPixelWidth * 8
-        height:             ScreenTools.defaultFontPixelHeight
-        radius:             _radius
-        anchors.bottom:     outerRing.top
-        anchors.bottomMargin:   ScreenTools.defaultFontPixelHeight * 0.25
-        anchors.horizontalCenter: outerRing.horizontalCenter
-        color:              Qt.rgba(0,0,0,0.5)
-        QGCLabel {
-            text:               qsTr("ZOOM MAX")
-            color:              "white"
-            font.pointSize:     ScreenTools.smallFontPointSize
-            anchors.centerIn:   parent
-        }
-    }
-
-    Rectangle {
-        visible:            _zoomControl
-        width:              ScreenTools.defaultFontPixelWidth * 8
-        height:             ScreenTools.defaultFontPixelHeight
-        radius:             _radius
-        anchors.top:        outerRing.bottom
-        anchors.topMargin:  ScreenTools.defaultFontPixelHeight * 0.25
-        anchors.horizontalCenter: outerRing.horizontalCenter
-        color:              Qt.rgba(0,0,0,0.5)
-        QGCLabel {
-            text:               qsTr("ZOOM MIN")
-            color:              "white"
-            font.pointSize:     ScreenTools.smallFontPointSize
-            anchors.centerIn:   parent
-        }
-    }
-
-    Rectangle {
-        width:              _hatWidth
-        height:             _hatWidth
-        radius:             _hatWidthHalf
-        color:              mapPal.thumbJoystick
-        x:                  stickPositionX - _hatWidthHalf
-        y:                  stickPositionY - _hatWidthHalf
+        readonly property real hatWidth:        ScreenTools.defaultFontPixelHeight
+        readonly property real hatWidthHalf:    ScreenTools.defaultFontPixelHeight / 2
     }
 
     Connections {
         target: touchPoint
+
         onXChanged: {
-            if (_processTouchPoints && !_zoomControl) {
+            if (_processTouchPoints) {
                 _joyRoot.stickPositionX = Math.max(Math.min(touchPoint.x, _joyRoot.width), 0)
             }
         }
@@ -176,7 +132,8 @@ Item {
         minimumTouchPoints: 1
         maximumTouchPoints: 1
         touchPoints:        [ TouchPoint { id: touchPoint } ]
-        onPressed:          _joyRoot.thumbDown(touchPoints)
-        onReleased:         _joyRoot.reCenter()
+
+        onPressed:  _joyRoot.thumbDown(touchPoints)
+        onReleased: _joyRoot.reCenter()
     }
 }

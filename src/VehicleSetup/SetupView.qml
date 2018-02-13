@@ -296,6 +296,15 @@ Rectangle {
                 }
             }
 
+            MessageDialog {
+                id: shutdownConfirmation
+                title: qsTr("Factory Reset Comfirm")
+                text: qsTr("You want to Factory reset?")
+                standardButtons: StandardButton.Yes | StandardButton.Cancel
+                modality: Qt.ApplicationModal
+                onYes: QGroundControl.multiVehicleManager.activeVehicle.parameterManager.resetAllParametersToDefaults()
+            }
+	    
             Rectangle {
                         color: qgcPal.window
 
@@ -308,7 +317,7 @@ Rectangle {
                         exclusiveGroup: setupButtonGroup
                         setupIndicator: false
                         visible: QGroundControl.multiVehicleManager && QGroundControl.multiVehicleManager.parameterReadyVehicleAvailable
-                        onClicked: QGroundControl.multiVehicleManager.activeVehicle.parameterManager.resetAllParametersToDefaults()
+                        onClicked: shutdownConfirmation.open();// 
                         Layout.fillWidth: true
            }
 
