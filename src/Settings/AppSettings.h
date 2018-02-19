@@ -28,12 +28,7 @@ public:
     Q_PROPERTY(Fact* offlineEditingDescentSpeed         READ offlineEditingDescentSpeed         CONSTANT)
     Q_PROPERTY(Fact* batteryPercentRemainingAnnounce    READ batteryPercentRemainingAnnounce    CONSTANT)
     Q_PROPERTY(Fact* defaultMissionItemAltitude         READ defaultMissionItemAltitude         CONSTANT)
-    Q_PROPERTY(Fact* telemetrySave                      READ telemetrySave                      CONSTANT)
-    Q_PROPERTY(Fact* telemetrySaveNotArmed              READ telemetrySaveNotArmed              CONSTANT)
-    Q_PROPERTY(Fact* audioMuted                         READ audioMuted                         CONSTANT)
     Q_PROPERTY(Fact* virtualJoystick                    READ virtualJoystick                    CONSTANT)
-    Q_PROPERTY(Fact* appFontPointSize                   READ appFontPointSize                   CONSTANT)
-    Q_PROPERTY(Fact* indoorPalette                      READ indoorPalette                      CONSTANT)
     Q_PROPERTY(Fact* showLargeCompass                   READ showLargeCompass                   CONSTANT)
     Q_PROPERTY(Fact* savePath                           READ savePath                           CONSTANT)
     Q_PROPERTY(Fact* autoLoadMissions                   READ autoLoadMissions                   CONSTANT)
@@ -64,12 +59,7 @@ public:
     Fact* offlineEditingDescentSpeed        (void);
     Fact* batteryPercentRemainingAnnounce   (void);
     Fact* defaultMissionItemAltitude        (void);
-    Fact* telemetrySave                     (void);
-    Fact* telemetrySaveNotArmed             (void);
-    Fact* audioMuted                        (void);
     Fact* virtualJoystick                   (void);
-    Fact* appFontPointSize                  (void);
-    Fact* indoorPalette                     (void);
     Fact* showLargeCompass                  (void);
     Fact* savePath                          (void);
     Fact* autoLoadMissions                  (void);
@@ -97,12 +87,7 @@ public:
     static const char* offlineEditingDescentSpeedSettingsName;
     static const char* batteryPercentRemainingAnnounceSettingsName;
     static const char* defaultMissionItemAltitudeSettingsName;
-    static const char* telemetrySaveName;
-    static const char* telemetrySaveNotArmedName;
-    static const char* audioMutedName;
     static const char* virtualJoystickName;
-    static const char* appFontPointSizeName;
-    static const char* indoorPaletteName;
     static const char* showLargeCompassName;
     static const char* savePathName;
     static const char* autoLoadMissionsName;
@@ -145,12 +130,7 @@ private:
     SettingsFact* _offlineEditingDescentSpeedFact;
     SettingsFact* _batteryPercentRemainingAnnounceFact;
     SettingsFact* _defaultMissionItemAltitudeFact;
-    SettingsFact* _telemetrySaveFact;
-    SettingsFact* _telemetrySaveNotArmedFact;
-    SettingsFact* _audioMutedFact;
     SettingsFact* _virtualJoystickFact;
-    SettingsFact* _appFontPointSizeFact;
-    SettingsFact* _indoorPaletteFact;
     SettingsFact* _showLargeCompassFact;
     SettingsFact* _savePathFact;
     SettingsFact* _autoLoadMissionsFact;

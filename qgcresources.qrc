@@ -274,7 +274,6 @@
     </qresource>
     <qresource prefix="/res/styles">
         <file alias="style-dark.css">resources/styles/style-dark.css</file>
-        <file alias="style-light.css">resources/styles/style-light.css</file>
     </qresource>
     <qresource prefix="/res/audio">
         <file alias="Alert">resources/audio/alert.wav</file>

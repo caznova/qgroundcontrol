@@ -28,6 +28,7 @@ class QGCCorePlugin_p
 public:
     QGCCorePlugin_p()
         : pGeneral                  (NULL)
+        , pWifi                     (NULL)//!--CTIT
         , pCommLinks                (NULL)
         , pOfflineMaps              (NULL)
         , pMAVLink                  (NULL)
@@ -49,6 +50,9 @@ public:
     {
         if(pGeneral)
             delete pGeneral;
+        //!--CTIT
+        if(pWifi)
+            delete pWifi;
         if(pCommLinks)
             delete pCommLinks;
         if(pOfflineMaps)
@@ -68,6 +72,7 @@ public:
     }
 
     QmlComponentInfo* pGeneral;
+    QmlComponentInfo* pWifi;//!--CTIT
     QmlComponentInfo* pCommLinks;
     QmlComponentInfo* pOfflineMaps;
     QmlComponentInfo* pMAVLink;
@@ -119,6 +124,13 @@ QVariantList &QGCCorePlugin::settingsPages()
                                        QUrl::fromUserInput("qrc:/qml/GeneralSettings.qml"),
                                        QUrl::fromUserInput("qrc:/res/gear-white.svg"));
         _p->settingsList.append(QVariant::fromValue((QmlComponentInfo*)_p->pGeneral));
+
+        //!--CTIT
+        _p->pWifi = new QmlComponentInfo(tr("Wifi"),
+                                       QUrl::fromUserInput("qrc:/qml/QGroundControl/CTIT/WifiSettings.qml"),
+                                       QUrl::fromUserInput("qrc:/res/waves.svg"));
+        _p->settingsList.append(QVariant::fromValue((QmlComponentInfo*)_p->pWifi));
+
         _p->pCommLinks = new QmlComponentInfo(tr("Comm Links"),
                                          QUrl::fromUserInput("qrc:/qml/LinkSettings.qml"),
                                          QUrl::fromUserInput("qrc:/res/waves.svg"));
@@ -192,33 +204,7 @@ bool QGCCorePlugin::overrideSettingsGroupVisibility(QString name)
 
 bool QGCCorePlugin::adjustSettingMetaData(FactMetaData& metaData)
 {
-    //-- Default Palette
-    if (metaData.name() == AppSettings::indoorPaletteName) {
-        QVariant outdoorPalette;
-#if defined (__mobile__)
-        outdoorPalette = 0;
-#else
-        outdoorPalette = 1;
-#endif
-        metaData.setRawDefaultValue(outdoorPalette);
-        return true;
-    //-- Auto Save Telemetry Logs
-    } else if (metaData.name() == AppSettings::telemetrySaveName) {
-#if defined (__mobile__)
-        metaData.setRawDefaultValue(false);
-        return true;
-#else
-        metaData.setRawDefaultValue(true);
-        return true;
-#endif
-#if defined(__ios__)
-    } else if (metaData.name() == AppSettings::savePathName) {
-        QString appName = qgcApp()->applicationName();
-        QDir rootDir = QDir(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-        metaData.setRawDefaultValue(rootDir.filePath(appName));
-        return false;
-#endif
-    }
+    Q_UNUSED(metaData);
     return true; // Show setting in ui
 }
 

@@ -10,6 +10,7 @@
 import QtQuick          2.3
 import QtQuick.Controls 1.2
 import QtQuick.Layouts  1.2
+import QtQuick.Dialogs 1.3
 
 import QGroundControl                       1.0
 import QGroundControl.AutoPilotPlugin       1.0
@@ -17,6 +18,7 @@ import QGroundControl.Palette               1.0
 import QGroundControl.Controls              1.0
 import QGroundControl.ScreenTools           1.0
 import QGroundControl.MultiVehicleManager   1.0
+
 
 Rectangle {
     id:     setupView
@@ -296,15 +298,30 @@ Rectangle {
                 }
             }
 
-            SubMenuButton {
-                setupIndicator:     false
-                exclusiveGroup:     setupButtonGroup
-                visible:            QGroundControl.multiVehicleManager && QGroundControl.multiVehicleManager.parameterReadyVehicleAvailable && _corePlugin.showAdvancedUI
-                text:               qsTr("Parameters")
-                Layout.fillWidth:   true
-
-                onClicked: showParametersPanel()
+            MessageDialog {
+                id: shutdownConfirmation
+                title: qsTr("Factory Reset Comfirm")
+                text: qsTr("You want to Factory reset?")
+                standardButtons: StandardButton.Yes | StandardButton.Cancel
+                modality: Qt.ApplicationModal
+                onYes: QGroundControl.multiVehicleManager.activeVehicle.parameterManager.resetAllParametersToDefaults()
             }
+	    
+            Rectangle {
+                        color: qgcPal.window
+
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+            }
+
+            SubMenuButton {
+                        text: qsTr("Factory Reset")
+                        exclusiveGroup: setupButtonGroup
+                        setupIndicator: false
+                        visible: QGroundControl.multiVehicleManager && QGroundControl.multiVehicleManager.parameterReadyVehicleAvailable
+                        onClicked: shutdownConfirmation.open();// 
+                        Layout.fillWidth: true
+           }
 
         }
     }

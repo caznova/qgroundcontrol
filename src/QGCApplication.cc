@@ -117,7 +117,6 @@ const char* QGCApplication::_deleteAllSettingsKey           = "DeleteAllSettings
 const char* QGCApplication::_settingsVersionKey             = "SettingsVersion";
 
 const char* QGCApplication::_darkStyleFile          = ":/res/styles/style-dark.css";
-const char* QGCApplication::_lightStyleFile         = ":/res/styles/style-light.css";
 
 // Mavlink status structures for entire app
 mavlink_status_t m_mavlink_status[MAVLINK_COMM_NUM_BUFFERS];
@@ -579,7 +578,6 @@ bool QGCApplication::_checkTelemetrySavePath(bool useMessageBox)
 
 void QGCApplication::_loadCurrentStyleSheet(void)
 {
-#ifndef __mobile__
     bool success = true;
     QString styles;
 
@@ -593,24 +591,12 @@ void QGCApplication::_loadCurrentStyleSheet(void)
         success = false;
     }
 
-    if (success && !_toolbox->settingsManager()->appSettings()->indoorPalette()->rawValue().toBool()) {
-        // Load the slave light stylesheet.
-        QFile styleSheet(_lightStyleFile);
-        if (styleSheet.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            styles += styleSheet.readAll();
-        } else {
-            qWarning() << "Unable to load slave light sheet:";
-            success = false;
-        }
-    }
-
     setStyleSheet(styles);
 
     if (!success) {
         // Fall back to plastique if we can't load our own
         setStyle("plastique");
     }
-#endif
 }
 
 void QGCApplication::reportMissingParameter(int componentId, const QString& name)

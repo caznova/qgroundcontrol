@@ -31,6 +31,8 @@
 #include "MockLink.h"
 #endif
 
+#include "WifiSettings.h"
+
 class QGCToolbox;
 
 class QGroundControlQmlGlobal : public QGCTool
@@ -53,6 +55,7 @@ public:
     Q_PROPERTY(QGCCorePlugin*       corePlugin          READ corePlugin             CONSTANT)
     Q_PROPERTY(SettingsManager*     settingsManager     READ settingsManager        CONSTANT)
     Q_PROPERTY(FactGroup*           gpsRtk              READ gpsRtkFactGroup        CONSTANT)
+    Q_PROPERTY(WifiSetting*         wifiSetting         READ wifiSetting            CONSTANT)
 
     Q_PROPERTY(int      supportedFirmwareCount          READ supportedFirmwareCount CONSTANT)
 
@@ -143,7 +146,8 @@ public:
     SettingsManager*        settingsManager     ()  { return _settingsManager; }
     FactGroup*              gpsRtkFactGroup     ()  { return &_gpsRtkFactGroup; }
     static QGeoCoordinate   flightMapPosition   ()  { return _coord; }
-    static double           flightMapZoom       ()  { return _zoom; }
+    static double           flightMapZoom       ()  { return _zoom; }\
+    WifiSetting*            wifiSetting         ()  { return _wifiSetting; }
 
     qreal zOrderTopMost             () { return 1000; }
     qreal zOrderWidgets             () { return 100; }
@@ -202,6 +206,7 @@ private:
     FirmwarePluginManager*  _firmwarePluginManager;
     SettingsManager*        _settingsManager;
     GPSRTKFactGroup         _gpsRtkFactGroup;
+    WifiSetting*            _wifiSetting;
 
     bool                    _skipSetupPage;
 

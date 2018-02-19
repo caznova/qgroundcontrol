@@ -24,12 +24,7 @@ const char* AppSettings::offlineEditingAscentSpeedSettingsName =        "Offline
 const char* AppSettings::offlineEditingDescentSpeedSettingsName =       "OfflineEditingDescentSpeed";
 const char* AppSettings::batteryPercentRemainingAnnounceSettingsName =  "batteryPercentRemainingAnnounce";
 const char* AppSettings::defaultMissionItemAltitudeSettingsName =       "DefaultMissionItemAltitude";
-const char* AppSettings::telemetrySaveName =                            "PromptFLightDataSave";
-const char* AppSettings::telemetrySaveNotArmedName =                    "PromptFLightDataSaveNotArmed";
-const char* AppSettings::audioMutedName =                               "AudioMuted";
 const char* AppSettings::virtualJoystickName =                          "VirtualTabletJoystick";
-const char* AppSettings::appFontPointSizeName =                         "BaseDeviceFontPointSize";
-const char* AppSettings::indoorPaletteName =                            "StyleIsDark";
 const char* AppSettings::showLargeCompassName =                         "ShowLargeCompass";
 const char* AppSettings::savePathName =                                 "SavePath";
 const char* AppSettings::autoLoadMissionsName =                         "AutoLoadMissions";
@@ -64,12 +59,7 @@ AppSettings::AppSettings(QObject* parent)
     , _offlineEditingDescentSpeedFact(NULL)
     , _batteryPercentRemainingAnnounceFact(NULL)
     , _defaultMissionItemAltitudeFact(NULL)
-    , _telemetrySaveFact(NULL)
-    , _telemetrySaveNotArmedFact(NULL)
-    , _audioMutedFact(NULL)
     , _virtualJoystickFact(NULL)
-    , _appFontPointSizeFact(NULL)
-    , _indoorPaletteFact(NULL)
     , _showLargeCompassFact(NULL)
     , _savePathFact(NULL)
     , _autoLoadMissionsFact(NULL)
@@ -80,7 +70,7 @@ AppSettings::AppSettings(QObject* parent)
 {
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     qmlRegisterUncreatableType<AppSettings>("QGroundControl.SettingsManager", 1, 0, "AppSettings", "Reference only");
-    QGCPalette::setGlobalTheme(indoorPalette()->rawValue().toBool() ? QGCPalette::Dark : QGCPalette::Light);
+    QGCPalette::setGlobalTheme(QGCPalette::Dark);
 
     // Instantiate savePath so we can check for override and setup default path if needed
 
@@ -189,42 +179,6 @@ Fact* AppSettings::defaultMissionItemAltitude(void)
     return _defaultMissionItemAltitudeFact;
 }
 
-Fact* AppSettings::telemetrySave(void)
-{
-    if (!_telemetrySaveFact) {
-        _telemetrySaveFact = _createSettingsFact(telemetrySaveName);
-    }
-
-    return _telemetrySaveFact;
-}
-
-Fact* AppSettings::telemetrySaveNotArmed(void)
-{
-    if (!_telemetrySaveNotArmedFact) {
-        _telemetrySaveNotArmedFact = _createSettingsFact(telemetrySaveNotArmedName);
-    }
-
-    return _telemetrySaveNotArmedFact;
-}
-
-Fact* AppSettings::audioMuted(void)
-{
-    if (!_audioMutedFact) {
-        _audioMutedFact = _createSettingsFact(audioMutedName);
-    }
-
-    return _audioMutedFact;
-}
-
-Fact* AppSettings::appFontPointSize(void)
-{
-    if (!_appFontPointSizeFact) {
-        _appFontPointSizeFact = _createSettingsFact(appFontPointSizeName);
-    }
-
-    return _appFontPointSizeFact;
-}
-
 Fact* AppSettings::virtualJoystick(void)
 {
     if (!_virtualJoystickFact) {
@@ -243,20 +197,10 @@ Fact* AppSettings::gstDebug(void)
     return _gstDebugFact;
 }
 
-Fact* AppSettings::indoorPalette(void)
-{
-    if (!_indoorPaletteFact) {
-        _indoorPaletteFact = _createSettingsFact(indoorPaletteName);
-        connect(_indoorPaletteFact, &Fact::rawValueChanged, this, &AppSettings::_indoorPaletteChanged);
-    }
-
-    return _indoorPaletteFact;
-}
-
 void AppSettings::_indoorPaletteChanged(void)
 {
     qgcApp()->_loadCurrentStyleSheet();
-    QGCPalette::setGlobalTheme(indoorPalette()->rawValue().toBool() ? QGCPalette::Dark : QGCPalette::Light);
+    QGCPalette::setGlobalTheme(QGCPalette::Dark);
 }
 
 Fact* AppSettings::showLargeCompass(void)

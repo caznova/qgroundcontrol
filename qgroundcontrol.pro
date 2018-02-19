@@ -7,14 +7,16 @@
 # License terms set in COPYING.md
 # -------------------------------------------------
 
+QMAKE_PROJECT_DEPTH = 0 # undocumented qmake flag to force absolute paths in make files
+
 exists($${OUT_PWD}/qgroundcontrol.pro) {
     error("You must use shadow build (e.g. mkdir build; cd build; qmake ../qgroundcontrol.pro).")
 }
 
 message(Qt version $$[QT_VERSION])
 
-!equals(QT_MAJOR_VERSION, 5) | !greaterThan(QT_MINOR_VERSION, 6) {
-    error("Unsupported Qt version, 5.7+ is required")
+!equals(QT_MAJOR_VERSION, 5) | !greaterThan(QT_MINOR_VERSION, 8) {
+    error("Unsupported Qt version, 5.9+ is required")
 }
 
 include(QGCCommon.pri)
@@ -207,8 +209,7 @@ contains(DEFINES, ENABLE_VERBOSE_OUTPUT) {
 } else:exists(user_config.pri):infile(user_config.pri, DEFINES, ENABLE_VERBOSE_OUTPUT) {
     message("Enable verbose compiler output (manual override from user_config.pri)")
 } else {
-CONFIG += \
-    silent
+    CONFIG += silent
 }
 
 QT += \
@@ -360,6 +361,7 @@ INCLUDEPATH += \
     src/ui/px4_configuration \
     src/ui/toolbar \
     src/ui/uas \
+    src/CTIT \
 
 FORMS += \
     src/ui/MainWindow.ui \
@@ -390,18 +392,20 @@ HEADERS += \
     src/api/QGCOptions.h \
     src/api/QGCSettings.h \
     src/api/QmlComponentInfo.h \
+    src/CTIT/WifiSettings.h
 
 SOURCES += \
     src/api/QGCCorePlugin.cc \
     src/api/QGCOptions.cc \
     src/api/QGCSettings.cc \
     src/api/QmlComponentInfo.cc \
+    src/CTIT/WifiSettings.cc
 
 #
 # Unit Test specific configuration goes here (requires full debug build with all plugins)
 #
 
-DebugBuild { PX4FirmwarePlugin { PX4FirmwarePluginFactory  { APMFirmwarePlugin { APMFirmwarePluginFactory { !MobileBuild {
+TestBuild { PX4FirmwarePlugin { PX4FirmwarePluginFactory  { APMFirmwarePlugin { APMFirmwarePluginFactory { !MobileBuild {
     DEFINES += UNITTEST_BUILD
 
     INCLUDEPATH += \
@@ -607,6 +611,9 @@ WindowsBuild {
     HEADERS += src/stable_headers.h
     CONFIG -= silent
     OTHER_FILES += .appveyor.yml
+    CONFIG -= flat
+    CONFIG += ordered
+    #CONFIG += object_parallel_to_source
 }
 
 contains(DEFINES, QGC_ENABLE_BLUETOOTH) {
