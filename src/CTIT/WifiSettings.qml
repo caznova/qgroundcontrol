@@ -81,7 +81,7 @@ QGCView {
                 Row {
                     spacing:    ScreenTools.defaultFontPixelWidth
                     QGCLabel {
-                        text:   qsTr("SSID:")
+                        text:   qsTr("Wifi Name:")
                         width:   (_labelWidth + _editFieldWidth) * 0.35
                     }
                     QGCTextField {
@@ -89,6 +89,12 @@ QGCView {
                         text:   ""
                         width:  (_labelWidth + _editFieldWidth) * 0.35
                         anchors.verticalCenter: parent.verticalCenter
+                        readOnly: true
+                        style: TextFieldStyle {
+                                background: Rectangle {
+                                    border.color: "#333"
+                                }
+                        }
                     }
                 }
                 Row {
@@ -129,33 +135,10 @@ QGCView {
                                 height:  1
                                 width:    (_labelWidth + _editFieldWidth) * 0.35
                                 color:   qgcPal.button
-                                visible: QGroundControl.wifiSetting.nameList.length > 0
-                            }
-                            Repeater {
-                                model: QGroundControl.wifiSetting.nameList
-                                delegate:
-                                QGCButton {
-                                    text:   modelData
-                                    width:   (_labelWidth + _editFieldWidth) * 0.35
-                                    anchors.leftMargin: ScreenTools.defaultFontPixelWidth * 2
-                                    exclusiveGroup: linkGroup
-                                    onClicked: {
-                                        checked = true
-                                        ssidField.text = modelData;
-                                    }
-                                }
-                            }
-                            Rectangle {
-                                height: 1
-                                width:   (_labelWidth + _editFieldWidth) * 0.35
-                                color:  qgcPal.button
+                                visible: QGroundControl.wifiSetting.wifiList.length > 0
                             }
                             Item {
-                                height: ScreenTools.defaultFontPixelHeight / 2
-                                width:  parent.width
-                            }
-                            Item {
-                                width:   (_labelWidth + _editFieldWidth) * 0.35
+                                width:   grid.width
                                 height: udpButtonRow.height
                                 Row {
                                     id:         udpButtonRow
@@ -171,14 +154,121 @@ QGCView {
                                     }
                                     QGCButton {
                                         width:      ScreenTools.defaultFontPixelWidth * 10
-                                        text:       qsTr("Stop")
+                                        text:       qsTr("Connect")
                                         enabled:    true
                                         onClicked: {
-                                            QGroundControl.wifiSetting.stopScan();
+                                            //QGroundControl.wifiSetting.stopScan();
                                         }
                                     }
                                 }
                             }
+                            GridLayout {
+                                   id: grid
+                                   columns: 4
+                                   rowSpacing: 5
+                                   columnSpacing: 5
+                                   width:   600
+                                   anchors.leftMargin: ScreenTools.defaultFontPixelWidth * 2
+                                   property var btn: QGroundControl.wifiSetting.wifiList
+                                   property var sig: QGroundControl.wifiSetting.wifiList
+                                   property var name: QGroundControl.wifiSetting.wifiList
+                                   property var secure: QGroundControl.wifiSetting.wifiList
+                                   rows: QGroundControl.wifiSetting.wifiList.length
+                                   flow: GridLayout.TopToBottom
+                                   height: QGroundControl.wifiSetting.wifiList.length * (ScreenTools.defaultFontPixelHeight + 20);
+
+                                   Repeater {
+                                       id: repeater
+                                       model: grid.name
+                                       Rectangle {
+                                           Layout.row: index
+                                           Layout.column: 0
+                                           Layout.fillWidth: true
+                                           Layout.preferredWidth: 370;
+                                           Layout.fillHeight: true
+                                           color: "white"
+                                           property var textz: modelData.ssid
+                                           Label {
+                                                anchors.centerIn: parent
+                                               text: parent.textz
+                                           }
+                                       }
+                                   }
+                                   Repeater {
+                                       model: grid.secure
+                                       Rectangle {
+                                           Layout.row: index
+                                           Layout.column: 1
+                                           Layout.fillWidth: true
+                                           Layout.preferredWidth: 100;
+                                           Layout.fillHeight: true
+                                           color: "white"
+                                           property var textz: (modelData.secure === true ? "Secure":"" )
+                                           Label {
+                                                anchors.centerIn: parent
+                                               text: parent.textz
+                                           }
+                                       }
+                                   }
+                                   Repeater {
+                                       model: grid.sig
+                                       Rectangle {
+                                           Layout.row: index
+                                           Layout.column: 2
+                                           Layout.fillWidth: true
+                                           Layout.preferredWidth: 60;
+                                           Layout.fillHeight: true
+                                           color: "white"
+                                           property var textz: modelData.signal + "%"
+                                           Label {
+                                                anchors.centerIn: parent
+                                               text: parent.textz
+                                           }
+                                       }
+                                   }
+                                   Repeater {
+                                       model: grid.btn
+                                       delegate: QGCButton {
+                                           text:   "Select"
+                                           Layout.row: index
+                                           Layout.column: 3
+                                           Layout.fillWidth: true
+                                           Layout.preferredWidth: 70;
+                                           Layout.fillHeight: true
+                                           exclusiveGroup: linkGroup
+                                           onClicked: {
+                                               checked = true
+                                               ssidField.text = modelData.name;
+                                           }
+                                       }
+                                   }
+                               }
+                            /*
+                            Repeater {
+                                model: QGroundControl.wifiSetting.nameList
+                                delegate:
+                                QGCButton {
+                                    text:   modelData
+                                    width:   (_labelWidth + _editFieldWidth) * 0.35
+                                    anchors.leftMargin: ScreenTools.defaultFontPixelWidth * 2
+                                    exclusiveGroup: linkGroup
+                                    onClicked: {
+                                        checked = true
+                                        ssidField.text = modelData;
+                                    }
+                                }
+                            }
+                            */
+                            Rectangle {
+                                height: 1
+                                width:   (_labelWidth + _editFieldWidth) * 0.35
+                                color:  qgcPal.button
+                            }
+                            Item {
+                                height: ScreenTools.defaultFontPixelHeight / 2
+                                width:  parent.width
+                            }
+
                         }
                     }
                 }
