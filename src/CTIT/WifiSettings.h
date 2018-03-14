@@ -15,6 +15,9 @@
 #include <QUrl>
 #include <QNetworkConfiguration>
 #include <QNetworkConfigurationManager>
+#include <QQmlProperty>
+#include <QQuickItem>
+
 #include "QGCToolbox.h"
 
 class WifiObject : public QObject
@@ -58,10 +61,14 @@ public:
     Q_INVOKABLE void stopScan();
 
     Q_PROPERTY(QList<QObject*>  wifiList    READ wifiList                     NOTIFY nameListChanged)
+    Q_PROPERTY(QQuickItem* connectBtn READ get_connectBtn WRITE set_connectBtn)
 
     QList<QObject*> wifiList                () { return _wifiList; }
     // Override from QGCTool
     void        setToolbox          (QGCToolbox *toolbox);
+
+    QQuickItem* get_connectBtn                  () { return _connectBtn; }
+    void set_connectBtn                         (QQuickItem* btn) { _connectBtn = btn; }
 public:
     WifiSetting    (QGCApplication* app, QGCToolbox* toolbox);
     ~WifiSetting   ();
@@ -72,5 +79,6 @@ private:
     QNetworkConfiguration           _netcfg;
     QList<QObject*>                 _wifiList;
     QList<QNetworkConfiguration>    _netcfgList;
+    QQuickItem*                     _connectBtn;
 };
 

@@ -153,11 +153,15 @@ QGCView {
                                         }
                                     }
                                     QGCButton {
+                                        id:         connectBtn
                                         width:      ScreenTools.defaultFontPixelWidth * 10
                                         text:       qsTr("Connect")
                                         enabled:    true
                                         onClicked: {
                                             //QGroundControl.wifiSetting.stopScan();
+                                        }
+                                        Component.onCompleted: {
+                                            QGroundControl.wifiSetting.connectBtn = connectBtn;
                                         }
                                     }
                                 }
@@ -238,7 +242,7 @@ QGCView {
                                            exclusiveGroup: linkGroup
                                            onClicked: {
                                                checked = true
-                                               ssidField.text = modelData.name;
+                                               ssidField.text = modelData.ssid;
                                            }
                                        }
                                    }

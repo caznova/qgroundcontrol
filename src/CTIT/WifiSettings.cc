@@ -33,7 +33,8 @@
 #endif
 
 WifiSetting::WifiSetting(QGCApplication* app, QGCToolbox* toolbox)
-    : QGCTool(app, toolbox)
+    : QGCTool(app, toolbox),
+      _connectBtn(NULL)
 {
 
 }
@@ -55,6 +56,10 @@ void WifiSetting::startScan()
     _wifiList.clear();
     emit nameListChanged();
 
+    if (_connectBtn){
+        _connectBtn->setProperty("text", "Scaning");
+        _connectBtn->setProperty("enable", "false");
+    }
 #ifdef WIN32
     HANDLE hClient = NULL;
     DWORD dwMaxClient = 2;
@@ -79,7 +84,39 @@ void WifiSetting::startScan()
     {
         if( pIfList->dwNumberOfItems <= 0 )
         {
+            if (_connectBtn){
+                _connectBtn->setProperty("text", "No Wifi");
+            }
             return ;
+        }
+
+        switch (pIfList->InterfaceInfo[0].isState) {
+        case wlan_interface_state_not_ready:
+        case wlan_interface_state_disconnecting:
+        case wlan_interface_state_associating:
+        case wlan_interface_state_discovering:
+        case wlan_interface_state_authenticating:
+        case wlan_interface_state_ad_hoc_network_formed:
+            wprintf(L"Not ready\n");
+            break;
+        case wlan_interface_state_connected:
+            wprintf(L"Connected\n");
+            if (_connectBtn){
+                _connectBtn->setProperty("text", "Disconnect");
+                _connectBtn->setProperty("enable", "true");
+            }
+            break;
+
+        case wlan_interface_state_disconnected:
+            wprintf(L"Not connected\n");
+            if (_connectBtn){
+                _connectBtn->setProperty("text", "Connect");
+                _connectBtn->setProperty("enable", "true");
+            }
+            break;
+        default:
+            //wprintf(L"Unknown state %ld\n", pIfInfo->isState);
+            break;
         }
 
         PWLAN_AVAILABLE_NETWORK_LIST pBssList  = NULL;
@@ -89,7 +126,6 @@ void WifiSetting::startScan()
                 NULL, &pBssList );
         if (dwResult != ERROR_SUCCESS)
         {
-            //printf("WlanGetAvailableNetworkList failed with error: %u\n",dwResult);
             WlanFreeMemory(pBssList );
             return ;
         }
@@ -97,7 +133,7 @@ void WifiSetting::startScan()
         {
             pBssEntry = (WLAN_AVAILABLE_NETWORK *) & pBssList->Network[j];
 
-            if (pBssEntry->dot11Ssid.uSSIDLength != 0)
+            if (pBssEntry->dot11Ssid.uSSIDLength != 0 && pBssEntry->bNetworkConnectable)
             {
                 WifiObject * _wifi = new WifiObject();
                 _wifi->set_ssid(QString::fromUtf8(reinterpret_cast<char *>(pBssEntry->dot11Ssid.ucSSID), pBssEntry->dot11Ssid.uSSIDLength));
