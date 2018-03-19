@@ -143,7 +143,7 @@ FlightMap {
 
         onNewItemsFromVehicle: {
             var visualItems = _missionController.visualItems
-            if (visualItems && visualItems.count != 1) {
+            if (visualItems && visualItems.count !== 1) {
                 mapFitFunctions.fitMapViewportToMissionItems()
                 firstVehiclePositionReceived = true
             }
@@ -155,7 +155,7 @@ FlightMap {
     }
 
     MapFitFunctions {
-        id:                         mapFitFunctions
+        id:                         mapFitFunctions // The name for this id cannot be changed without breaking references outside of this code. Beware!
         map:                        _flightMap
         usePlannedHomePosition:     false
         planMasterController:       _planMasterController
